@@ -1,8 +1,6 @@
 const Identity = require('../models/identityModel');
 const User = require('../models/userModel');
 const asyncHandler = require('express-async-handler');
-const Avatar = require('avatar-builder');
-const gravatar = require('gravatar');
 const { uniqueNamesGenerator, adjectives, colors, animals } = require('unique-names-generator');
 const shortid = require('shortid');
 const { loginSchema } = require('../middlewares/schema');

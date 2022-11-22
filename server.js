@@ -3,7 +3,6 @@ if(process.env.NODE_ENV !== "production"){
 }
 const express = require('express');
 const app = express();
-const morgan = require('morgan');
 const compression = require('compression');
 const {errorHandler, notFound} = require('./middlewares/errorhandler')
 const session = require('express-session');
@@ -30,9 +29,6 @@ app.use(express.json());
 app.use(compression());
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
 
-if (process.env.NODE_ENV === "development") {
-    app.use(morgan("dev"));
-}
 
 //intailize database
 connectDB()
