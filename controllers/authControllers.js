@@ -86,7 +86,7 @@ const loginUser = asyncHandler(async(req, res) => {
     const user = await User.findOne({userId: value.userId})
 
     if(user){
-        const token = jwt.sign({ email: user.email }, process.env.SECRET)
+        const token = jwt.sign({ userId: user.userId }, process.env.SECRET)
 
         res.status(201).json({"status": "success", "data": user, "token": token})
     } else {

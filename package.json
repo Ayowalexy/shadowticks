@@ -21,8 +21,11 @@
     "express-session": "^1.17.3",
     "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
+    "lazerpay-node-sdk": "^0.2.1",
+    "moment": "^2.29.4",
     "mongoose": "^6.7.2",
     "shortid": "^2.2.16",
+    "socket.io": "^4.5.4",
     "unique-names-generator": "^4.7.1"
   }
 }

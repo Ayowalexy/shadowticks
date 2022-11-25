@@ -10,7 +10,12 @@ const userModel = new Schema({
     userId: {
         type: String,
         default: ""
-    }
+    },
+    walletBalance: {
+        type: Number,
+        default: 0
+    },
+    socketId: String
 }, { timestamps: true })
 
 module.exports = mongoose.model('user', userModel)
