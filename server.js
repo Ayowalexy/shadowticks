@@ -76,12 +76,12 @@ io.on('connection', socket => {
 
             if (type === 'load messages') {
 
-                io.to(roomUUid).emit("allMessages", [...allMessages, 'loaded']);
+                io.to(roomUUid).emit("allMessages", [...allMessages]);
                 
             } else {
                 const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name)
                 io.to(roomUUid).emit("message", newMessage);
-                io.to(roomUUid).emit("allMessages", [...allMessages, newMessage, 'loaded']);
+                io.to(roomUUid).emit("allMessages", [...allMessages, newMessage]);
             }
 
         }
