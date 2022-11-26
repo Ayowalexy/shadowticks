@@ -5,14 +5,14 @@ eg io.on('connection', socket => {})
 
 To initiate a chat between two users, connect to
 
-##chatuser
+## chatuser
 
 passing an object with 4 fields
 
 senderId, receiverId, message, type
 
-#senderId (string !required)  - _id of the user sending the message eg(637f77b85bc74ec93557073b) 
-#receiverId (string !required)  - _id of the user the message is sent to eg(637f77b85bc74ec93557073b) 
+### senderId (string !required)  - _id of the user sending the message eg(637f77b85bc74ec93557073b) 
+### receiverId (string !required)  - _id of the user the message is sent to eg(637f77b85bc74ec93557073b) 
 message - (string ! required) - the message to be sent
 type(string !required) - [load messages | send message] the value should be load messages to load all previous messages between two users, an array of all messages is returned and send message to send a single message, the sent message is returned
 
@@ -30,7 +30,7 @@ To Send a message eg:  const data = {senderId: '637f77b85bc74ec93557073b', recei
 
 To get Listen for all new messages on a socket between to users, listen on this socket
 
-##allMessages
+## allMessages
 
 eg socket.on('allMessages', (data) => {
     console.log("All Messages", data)
@@ -47,7 +47,7 @@ an Array of all the messages between two users is returned in real time
 
 To listen for message sent between two users, listen on this socket
 
-##message
+## message
 
 eg socket.on('message', message => {
     console.log(message)
@@ -62,7 +62,7 @@ eg socket.on('message', message => {
 
 To get all the feed messages, emit from this socket and pass nothing to the connections
 
-##feeds
+## feeds
  eg socket.emit('feeds')
 
 
@@ -74,7 +74,7 @@ To get all the feed messages, emit from this socket and pass nothing to the conn
 
 After emitting, you should then listen on this socket for all the messages
 
-##feedsMessages
+## feedsMessages
 
 eg socket.on('feedsMessages', data => {
     console.log('Feeds', data)
@@ -90,7 +90,7 @@ An array of all the messages is returned
 
 To send a message to a feed, emit on this socket
 
-##sendFeedMessage
+## sendFeedMessage
 
 eg  socket.emit('sendFeedMessage', {
         message: msg,
@@ -100,7 +100,7 @@ eg  socket.emit('sendFeedMessage', {
 
 To listen for new message in a feed, listen on thiis socket
 
-##newFeedMessage
+## newFeedMessage
 
 eg  socket.on('newFeedMessage', (msg) => {
     console.log('Msg', msg)
