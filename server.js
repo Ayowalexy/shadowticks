@@ -8,12 +8,18 @@ const { errorHandler, notFound } = require('./middlewares/errorhandler')
 const session = require('express-session');
 const socketIO = require('socket.io');
 const http = require('http');
+const cors = require('cors')
 const path = require('path')
 const connectDB = require('./middlewares/connectDB');
 const { joinChat, getUser, addMessage, getAllMessagess, getAllFeeds, sendFeedMessage } = require('./middlewares/userchat')
 
 const server = http.createServer(app)
-const io = socketIO(server)
+const io = socketIO(server, {
+    cors: {
+        origin: "*"
+    }
+})
+
 
 //routes
 const AuthRoutes = require('./routes/auth');
@@ -36,6 +42,7 @@ const sessionConfig = {
 app.use(session(sessionConfig))
 app.use(express.json());
 app.use(compression());
+app.use(cors())
 app.use(express.urlencoded({ limit: "500mb", extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
