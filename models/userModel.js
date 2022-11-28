@@ -15,7 +15,15 @@ const userModel = new Schema({
         type: Number,
         default: 0
     },
-    socketId: String
+    socketId: String,
+    contact: [{
+        type: Schema.Types.ObjectId,
+        ref: "user"
+    }],
+    transactions: [{
+        type: Schema.Types.ObjectId,
+        ref: 'transaction'
+    }]
 }, { timestamps: true })
 
 module.exports = mongoose.model('user', userModel)

@@ -35,11 +35,11 @@ const joinChat = async (id) => {
     }
 }
 
-const addMessage = async (id, message, from, to) => {
+const addMessage = async (id, message, from, to, senderId, receiverId) => {
     try {
 
         const room = await Room.findById({ _id: id })
-        const msg = { message, from, to, time: moment().format('h:mm a') }
+        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId }
         if (room) {
             room.messages.push(msg)
             await room.save();
@@ -70,7 +70,7 @@ const getAllMessagess = async (id) => {
 
 const getUser = async (id) => {
     try {
-        const user = await User.findById({ _id: id }).populate('identity')
+        const user = await User.findById({ _id: id }).populate('identity').populate('contact')
         return user
     } catch (e) {
         return e
@@ -99,7 +99,8 @@ const sendFeedMessage = async (message, sentBy) => {
 
     try {
         const time = moment().format('h:mm a');
-        const newMessage = new Message({ time, message, sentBy: sentBy });
+        const newMessage = new Message({ time, message });
+        newMessage.sentBy = sentBy;
 
         const all = await Feed.find()
         const feed = all[0]
@@ -116,11 +117,43 @@ const sendFeedMessage = async (message, sentBy) => {
 
 }
 
+const getAllChatFeeds = async (id) => {
+    try {
+
+        const allUser = await User.findById({_id: id}).populate('contact')
+        const contact = allUser.contact;
+
+        return contact;
+
+    } catch (e) {
+        return e
+    }
+}
+
+
+const addToContact = async (userId, contactId) => {
+    try {
+
+        const user = await User.findById({_id: userId});
+        const contact = await User.findById({_id: contactId});
+
+        if(user && contact){
+            user.contact.push(contact);
+            await user.save()
+        } 
+
+    } catch (e) {
+        return e
+    }
+}
+
 module.exports = {
     joinChat,
     getUser,
     addMessage,
     getAllMessagess,
     sendFeedMessage,
-    getAllFeeds
+    getAllFeeds,
+    getAllChatFeeds,
+    addToContact
 }

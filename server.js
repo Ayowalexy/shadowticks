@@ -11,7 +11,16 @@ const http = require('http');
 const cors = require('cors')
 const path = require('path')
 const connectDB = require('./middlewares/connectDB');
-const { joinChat, getUser, addMessage, getAllMessagess, getAllFeeds, sendFeedMessage } = require('./middlewares/userchat')
+const {
+    joinChat,
+    getUser,
+    addMessage,
+    getAllMessagess,
+    getAllFeeds,
+    sendFeedMessage,
+    getAllChatFeeds,
+    addToContact
+} = require('./middlewares/userchat')
 
 const server = http.createServer(app)
 const io = socketIO(server, {
@@ -81,12 +90,11 @@ io.on('connection', socket => {
 
             const allMessages = await getAllMessagess(roomUUid);
 
-            if (type === 'load messages') {
 
+            if (type === 'load messages') {
                 io.to(roomUUid).emit("allMessages", [...allMessages]);
-                
             } else {
-                const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name)
+                const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name, sender._id.toString(), receiver._id.toString())
                 io.to(roomUUid).emit("message", newMessage);
                 io.to(roomUUid).emit("allMessages", [...allMessages, newMessage]);
             }
@@ -96,20 +104,44 @@ io.on('connection', socket => {
 
 
     socket.on('feeds', async () => {
-        
+
         const feeds = await getAllFeeds();
         io.emit("feedsMessages", feeds);
 
     })
 
+    socket.on('connectedUser', async (id) => {
+
+        const contact = await getAllChatFeeds(id);
+
+        socket.join(id);
+
+        io.to(id).emit("allChatUsers", contact);
+
+    })
+
+
     socket.on('sendFeedMessage', async (data) => {
-        const { userId, message } = data;
+        const { userId, message, receiverId } = data;
 
         const sentBy = await getUser(userId);
+        const receivedBy = await getUser(receiverId);
 
-        if(sentBy){
+        const senderHasAddedReceicer = sentBy?.contact?.some(element => element._id.toString() === receiverId);
+        
+        const receiverHasAddedSender = receivedBy?.contact?.some(element => element._id.toString() === userId);
+
+
+        if(!senderHasAddedReceicer){
+            await addToContact(userId, receiverId)
+        }
+        if(!receiverHasAddedSender){
+            await addToContact(receiverId, userId)
+        }
+
+        if (sentBy) {
             const sendMessage = await sendFeedMessage(message, sentBy);
-            if(sendMessage){
+            if (sendMessage) {
                 io.emit("newFeedMessage", sendMessage);
             }
         }

@@ -24,14 +24,22 @@ socket.on('message', message => {
     sendMessage(message)
 })
 
-socket.on('chatuser', message => {
-    console.log(message)
+
+
+socket.on('allChatUsers', message => {
+    console.log('allChatUsers', message)
    
 })
 
-socket.on('allMessages', (data) => {
-    console.log("All Messages", data)
+// socket.on('allMessages', (data) => {
+//     console.log("All Messages", data)
+// })
+
+socket.on('allMessages', message => {
+    console.log('allMessages', message)
 })
+
+socket.emit('connectedUser', '637f77b85bc74ec93557073b')
 
 
 socket.emit('chatuser', {senderId: '637f77b85bc74ec93557073b', receiverId: '637f77a85bc74ec935570737', type: 'load messages'})
@@ -54,12 +62,13 @@ form.addEventListener('submit', (e) => {
 
     const msg = e.target.elements.msg.value;
     const data = {senderId: '637f77b85bc74ec93557073b', receiverId: '637f77a85bc74ec935570737', message: msg, type: 'send message'}
-    // socket.emit('chatuser', data)
+    socket.emit('chatuser', data)
     // console.log('emit data', data)
 
     socket.emit('sendFeedMessage', {
         message: msg,
-        userId: '638022bafe991869c79054e9'
+        userId: '637f77b85bc74ec93557073b',
+        receiverId: "637f77a85bc74ec935570737"
     })
 
 }, false)

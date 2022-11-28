@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="paymentForm">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" />
+        </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email-address" />
+        </div>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" required />
+        </div>
+        <div class="form-submit">
+            <button type="submit" onclick="payWithLazerpay()"> Pay with Lazerpay </button>
+        </div>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/gh/LazerPay-Finance/checkout-build@main/checkout@1.0.1/dist/index.min.js">
+    </script>
+
+    <script>
+        const paymentForm = document.getElementById('paymentForm');
+
+        paymentForm.addEventListener("submit", payWithLazerpay, false);
+
+        const metadata = {
+            'userId': 'UHLM19P8B_',
+            'id': '637f77b85bc74ec93557073b',
+        };
+
+        function payWithLazerpay(e) {
+            e.preventDefault();
+            LazerCheckout({
+                reference: Math.random().toString(),
+                name: 'John Doe',
+                email: 'seinde4@yahoo.com',
+                amount: '10',
+                key: "pk_test_fR1Ljc0MpRqwaWeSJ1KOFfcMojZHPZCOpLUbkOJ40FSsqbhfrI",
+                currency: "NGN",
+                metadata,
+                acceptPartialPayment: true, // By default it's false
+                onClose: (data) => {
+                },
+                onSuccess: (data) => {
+                },
+                onError: (data) => {
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>

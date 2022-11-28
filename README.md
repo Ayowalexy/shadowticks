@@ -94,7 +94,8 @@ To send a message to a feed, emit on this socket
 
 eg  socket.emit('sendFeedMessage', {
         message: msg,
-        userId: '638022bafe991869c79054e9'
+        userId: '638022bafe991869c79054e9',
+        receiverId: '637f77a85bc74ec935570737'
     })
 
 
@@ -105,3 +106,25 @@ To listen for new message in a feed, listen on thiis socket
 eg  socket.on('newFeedMessage', (msg) => {
     console.log('Msg', msg)
 })
+
+
+
+
+To get all the users a user has been chatting with, emit from this socket passing the _id of thr user
+
+## connectedUser
+
+eg socket.emit('connectedUser', '637f77b85bc74ec93557073b')
+
+You will then listen for all the users, an array will be returns listening on this socket
+
+## allChatUsers
+
+eg socket.on('allChatUsers', message => {
+    console.log('allChatUsers', message)
+})
+
+
+
+
+
