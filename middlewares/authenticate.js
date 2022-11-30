@@ -34,7 +34,7 @@ const protect = expressAsyncHandler(async (req, res, next) => {
             const bearer = bearerHeader.split(' ')
             const bearerToken = bearer[1]
             token = bearerToken;
-            const decoded = verify(bearerToken, process.env.SECRET)
+            const decoded = verify(bearerToken, process.env.SECRET || '123456789')
             const user = await User.findOne({ userId: decoded.userId });
 
 

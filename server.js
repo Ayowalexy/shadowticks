@@ -105,6 +105,40 @@ io.on('connection', socket => {
             if (type === 'load messages') {
                 io.to(roomUUid).emit("allMessages", [...allMessages]);
             } else {
+
+
+                const { senderId, message, receiverId } = data;
+
+                const sentBy = await getUser(senderId);
+                const receivedBy = await getUser(receiverId);
+        
+                const senderHasAddedReceicer = sentBy?.contact?.some(element => element._id.toString() === receiverId);
+        
+                const receiverHasAddedSender = receivedBy?.contact?.some(element => element._id.toString() === senderId);
+        
+                console.log(senderHasAddedReceicer, receiverHasAddedSender)
+                if (!senderHasAddedReceicer) {
+                    await addToContact(senderId, receiverId);
+        
+                    const contact = await getAllChatFeeds(senderId);
+        
+                    socket.join(senderId);
+        
+                    io.to(senderId).emit("allChatUsers", contact);
+                }
+                if (!receiverHasAddedSender) {
+                    await addToContact(receiverId, senderId);
+        
+                    const contact = await getAllChatFeeds(receiverId);
+        
+                    socket.join(receiverId);
+        
+                    io.to(receiverId).emit("allChatUsers", contact);
+                    
+                }
+
+
+
                 const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name, sender._id.toString(), receiver._id.toString())
                 io.to(roomUUid).emit("message", newMessage);
                 io.to(roomUUid).emit("allMessages", [...allMessages, newMessage]);
@@ -142,12 +176,25 @@ io.on('connection', socket => {
 
         const receiverHasAddedSender = receivedBy?.contact?.some(element => element._id.toString() === userId);
 
-
+        console.log(senderHasAddedReceicer, receiverHasAddedSender)
         if (!senderHasAddedReceicer) {
-            await addToContact(userId, receiverId)
+            await addToContact(userId, receiverId);
+
+            const contact = await getAllChatFeeds(userId);
+
+            socket.join(userId);
+
+            io.to(userId).emit("allChatUsers", contact);
         }
         if (!receiverHasAddedSender) {
-            await addToContact(receiverId, userId)
+            await addToContact(receiverId, userId);
+
+            const contact = await getAllChatFeeds(receiverId);
+
+            socket.join(receiverId);
+
+            io.to(receiverId).emit("allChatUsers", contact);
+            
         }
 
         if (sentBy) {

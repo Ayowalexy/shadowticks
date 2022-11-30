@@ -143,7 +143,7 @@ const loginUser = expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({ userId: value.userId })
 
     if (user) {
-        const token = sign({ userId: user.userId }, process.env.SECRET)
+        const token = sign({ userId: user.userId }, process.env.SECRET || '123456789')
 
         res.status(201).json({ "status": "success", "data": user, "token": token })
     } else {
