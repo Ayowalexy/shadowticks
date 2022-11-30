@@ -1,9 +1,12 @@
-const express = require('express');
+import express from 'express';
+import { generateUrl, addReaction } from '../controllers/chat.js';
+import { protect } from '../middlewares/authenticate.js';
 const router = express.Router();
-const { generateUrl } = require('../controllers/chat');
-const { protect } = require('../middlewares/authenticate')
+
+
 
 router.route('/').get(protect, generateUrl);
+router.route('/reaction/:id').post(protect, addReaction)
 
 
-module.exports = router
+export default router

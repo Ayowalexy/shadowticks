@@ -1,7 +1,12 @@
-const Joi = require('joi');
+import Joi from "joi";
 
 const loginSchema = Joi.object({
     userId: Joi.string()
+        .required()
+})
+
+const messageSchema = Joi.object({
+    reaction: Joi.string()
         .required()
 })
 
@@ -25,7 +30,8 @@ const sendCoinSchema = Joi.object({
 
 })
 
-module.exports = {
+export {
     loginSchema,
-    sendCoinSchema
+    sendCoinSchema,
+    messageSchema
 }

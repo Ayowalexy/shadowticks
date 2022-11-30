@@ -1,18 +1,25 @@
-const asyncHandler = require('express-async-handler');
+// const Lazerpay = require('lazerpay-node-sdk').default;
+
+
+import expressAsyncHandler from 'express-async-handler';
+import User from '../models/userModel.js';
+import crypto from 'crypto';
+import { sendCoinSchema } from '../middlewares/schema.js';
+import Transaction from '../models/transactions.js';
+import Lazerpay from 'lazerpay-node-sdk';
+import axios from 'axios';
+
+
+const LPayer = Lazerpay.default;
+
 const LAZER_SECRET_KEY = process.env.LAZER_PAY_SK;
 const LAZER_PUBLIC_KEY = process.env.LAZER_PAY_PK;
-const User = require('../models/userModel');
-const crypto = require('crypto');
-const { sendCoinSchema } = require('../middlewares/schema')
-const Transaction = require('../models/transactions');
-const Lazerpay = require('lazerpay-node-sdk').default;
-const axios = require('axios');
-const lazerpay = new Lazerpay(LAZER_PUBLIC_KEY, LAZER_SECRET_KEY)
+const lazerpay = new LPayer(LAZER_PUBLIC_KEY, LAZER_SECRET_KEY)
 
 
 
 
-const getAllWallet = asyncHandler(async (req, res) => {
+const getAllWallet = expressAsyncHandler(async (req, res) => {
     try {
         const response = await lazerpay.Misc.getAcceptedCoins();
         res.status(200).json(response)
@@ -22,7 +29,7 @@ const getAllWallet = asyncHandler(async (req, res) => {
 })
 
 
-const getWalletAddress = asyncHandler(async (req, res) => {
+const getWalletAddress = expressAsyncHandler(async (req, res) => {
 
     try {
         const response = await axios.get(
@@ -41,7 +48,7 @@ const getWalletAddress = asyncHandler(async (req, res) => {
     }
 })
 
-const sendCoin = asyncHandler(async (req, res) => {
+const sendCoin = expressAsyncHandler(async (req, res) => {
 
     const { error, value } = sendCoinSchema.validate(req.body);
 
@@ -97,7 +104,7 @@ const sendCoin = asyncHandler(async (req, res) => {
 })
 
 
-const confirmPaymentWebhook = asyncHandler(async (req, res) => {
+const confirmPaymentWebhook = expressAsyncHandler(async (req, res) => {
 
     const hash = crypto.createHmac('sha256', LAZER_SECRET_KEY).update(JSON.stringify(req.body), 'utf8').digest('hex');
 
@@ -137,7 +144,7 @@ const confirmPaymentWebhook = asyncHandler(async (req, res) => {
 })
 
 
-const getAllTransactions = asyncHandler(async (req, res) => {
+const getAllTransactions = expressAsyncHandler(async (req, res) => {
 
     const user = await User.findById({ _id: req.params.id }).populate('transactions')
     if (user) {
@@ -147,7 +154,7 @@ const getAllTransactions = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = {
+export {
     sendCoin,
     getAllWallet,
     confirmPaymentWebhook,

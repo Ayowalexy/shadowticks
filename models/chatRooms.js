@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 
@@ -15,4 +15,6 @@ const chatRoomSchema = new Schema({
     receiverId: String
 })
 
-module.exports = mongoose.model('chatroom', chatRoomSchema)
+const Room = mongoose.model('chatroom', chatRoomSchema);
+
+export default Room

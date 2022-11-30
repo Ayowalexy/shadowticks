@@ -1,7 +1,8 @@
-const express = require('express');
+
+import { protect } from '../middlewares/authenticate.js';
+import { sendCoin, getAllWallet, confirmPaymentWebhook, getAllTransactions, getWalletAddress } from '../controllers/wallet.js';
+import express from 'express'
 const router = express.Router();
-const { sendCoin, getAllWallet, confirmPaymentWebhook, getAllTransactions, getWalletAddress } = require('../controllers/wallet');
-const { protect } = require('../middlewares/authenticate')
 
 router.route('/send').post(protect, sendCoin);
 router.route('/').get(protect, getAllWallet)
@@ -10,6 +11,6 @@ router.route('/payment').post(confirmPaymentWebhook);
 router.route('/transactions/:id').get(protect, getAllTransactions)
 
 
-module.exports = router
+export default router
 
 // https://swapplug.herokuapp.com/api/v1/coins/webhook/payment

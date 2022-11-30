@@ -39,10 +39,10 @@ socket.on('allMessages', message => {
     console.log('allMessages', message)
 })
 
-socket.emit('connectedUser', '637f77b85bc74ec93557073b')
+socket.emit('connectedUser', '63871e592d596faa859250bc')
 
 
-socket.emit('chatuser', {senderId: '637f77b85bc74ec93557073b', receiverId: '637f77a85bc74ec935570737', type: 'load messages'})
+socket.emit('chatuser', {senderId: '63871e592d596faa859250bc', receiverId: '63871d7a9c8f0edd32de20a9', type: 'load messages'})
 
 socket.emit('feeds')
 
@@ -61,14 +61,14 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const msg = e.target.elements.msg.value;
-    const data = {senderId: '637f77b85bc74ec93557073b', receiverId: '637f77a85bc74ec935570737', message: msg, type: 'send message'}
-    socket.emit('chatuser', data)
+    // const data = {senderId: '63871e592d596faa859250bc', receiverId: '63871d7a9c8f0edd32de20a9', message: msg, type: 'send message'}
+    // socket.emit('chatuser', data)
     // console.log('emit data', data)
 
     socket.emit('sendFeedMessage', {
         message: msg,
-        userId: '637f77b85bc74ec93557073b',
-        receiverId: "637f77a85bc74ec935570737"
+        userId: '63871e592d596faa859250bc',
+        receiverId: "63871d7a9c8f0edd32de20a9"
     })
 
 }, false)

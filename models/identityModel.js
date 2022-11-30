@@ -1,14 +1,16 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const identitySchema = new Schema({
     userId: String,
     name: String,
-    imageUrl: String,
+    imageSvg: String,
     isOwnned: {
         type: Boolean,
         default: false
     }
 }, { timestamps: true })
 
-module.exports = mongoose.model('identity', identitySchema)
+const Identity = mongoose.model('identity', identitySchema)
+
+export default Identity

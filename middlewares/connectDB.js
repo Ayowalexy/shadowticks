@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
 const PASSWORD = process.env.PASSWORD;
 const DATABASE = process.env.DATABASE
@@ -25,4 +25,4 @@ const connectDB = async () => {
     }
 } 
 
-module.exports = connectDB
+export default connectDB

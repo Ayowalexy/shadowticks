@@ -1,11 +1,9 @@
-const Room = require('../models/chatRooms')
-const asyncHandler = require('express-async-handler')
-const User = require('../models/userModel')
-const moment = require('moment')
-const Feed = require('../models/feed');
-const Message = require('../models/message')
-
-
+import Room from '../models/chatRooms.js';
+import expressAsyncHandler from 'express-async-handler';
+import User from '../models/userModel.js';
+import moment from 'moment';
+import Feed from '../models/feed.js';
+import Message from '../models/message.js';
 
 const joinChat = async (id) => {
     try {
@@ -103,9 +101,9 @@ const sendFeedMessage = async (message, sentBy) => {
         newMessage.sentBy = sentBy;
 
         const all = await Feed.find()
-        const feed = all[0]
+        // const feed = all[0]
 
-        // const feed = new Feed()
+        const feed = new Feed()
         feed.messages.push(newMessage);
         await feed.save()
 
@@ -147,7 +145,7 @@ const addToContact = async (userId, contactId) => {
     }
 }
 
-module.exports = {
+export {
     joinChat,
     getUser,
     addMessage,

@@ -1,9 +1,11 @@
-const auth = require('basic-auth');
-const asyncHandler = require('express-async-handler')
-const User = require('../models/identityModel');
-const jwt = require('jsonwebtoken')
+import auth from 'basic-auth';
+import expressAsyncHandler from 'express-async-handler';
+import User from '../models/userModel.js';
+import jwt from 'jsonwebtoken';
 
-const secured = asyncHandler(async (req, res, next) => {
+const { verify } = jwt;
+
+const secured = expressAsyncHandler(async (req, res, next) => {
 
     try {
 
@@ -23,7 +25,7 @@ const secured = asyncHandler(async (req, res, next) => {
 })
 
 
-const protect = asyncHandler(async (req, res, next) => {
+const protect = expressAsyncHandler(async (req, res, next) => {
     let token
 
     try {
@@ -32,7 +34,7 @@ const protect = asyncHandler(async (req, res, next) => {
             const bearer = bearerHeader.split(' ')
             const bearerToken = bearer[1]
             token = bearerToken;
-            const decoded = jwt.verify(bearerToken, process.env.SECRET)
+            const decoded = verify(bearerToken, process.env.SECRET)
             const user = await User.findOne({ userId: decoded.userId });
 
 
@@ -63,7 +65,7 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 })
 
-module.exports = {
+export {
     secured,
     protect
 }

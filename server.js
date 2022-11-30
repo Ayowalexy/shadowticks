@@ -1,17 +1,17 @@
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config()
-}
-const express = require('express');
-const app = express();
-const compression = require('compression');
-const { errorHandler, notFound } = require('./middlewares/errorhandler')
-const session = require('express-session');
-const socketIO = require('socket.io');
-const http = require('http');
-const cors = require('cors')
-const path = require('path')
-const connectDB = require('./middlewares/connectDB');
-const {
+import * as dotenv from 'dotenv';
+import compression from 'compression';
+import session from 'express-session';
+import * as socketIO from 'socket.io';
+import http from 'http';
+import cors from 'cors';
+import path from 'path';
+import AuthRoutes from './routes/auth.js'
+import WalletRoutes from './routes/wallet.js'
+import UrlRoutes from './routes/chat.js'
+import connectDB from './middlewares/connectDB.js';
+import { errorHandler, notFound } from './middlewares/errorhandler.js';
+import express from 'express';
+import {
     joinChat,
     getUser,
     addMessage,
@@ -20,21 +20,31 @@ const {
     sendFeedMessage,
     getAllChatFeeds,
     addToContact
-} = require('./middlewares/userchat')
+} from './middlewares/userchat.js';
+import { Server } from "socket.io";
+import { createServer } from 'http';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const server = http.createServer(app)
-const io = socketIO(server, {
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// dotenv.config({ path: '/.env'});
+
+const app = express();
+
+const httpServer = createServer(app);
+
+const io = new Server(httpServer, {
     cors: {
         origin: "*"
     }
-})
+});
 
 
-//routes
-const AuthRoutes = require('./routes/auth');
-const WalletRoutes = require('./routes/wallet')
-const UrlRoutes = require('./routes/chat')
 
+const server = http.createServer(app)
 
 const sessionConfig = {
     secret: 'thisshouldbeabettersecret',
@@ -57,8 +67,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 //intailize database
-connectDB()
 
+
+connectDB()
 
 app.get('/', (req, res) => {
     res.json({ message: "Connected" })
@@ -66,7 +77,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', AuthRoutes)
 app.use('/wallet', WalletRoutes)
-app.use('/url', UrlRoutes)
+app.use('/chat', UrlRoutes)
 
 
 io.on('connection', socket => {
@@ -128,20 +139,22 @@ io.on('connection', socket => {
         const receivedBy = await getUser(receiverId);
 
         const senderHasAddedReceicer = sentBy?.contact?.some(element => element._id.toString() === receiverId);
-        
+
         const receiverHasAddedSender = receivedBy?.contact?.some(element => element._id.toString() === userId);
 
 
-        if(!senderHasAddedReceicer){
+        if (!senderHasAddedReceicer) {
             await addToContact(userId, receiverId)
         }
-        if(!receiverHasAddedSender){
+        if (!receiverHasAddedSender) {
             await addToContact(receiverId, userId)
         }
 
         if (sentBy) {
             const sendMessage = await sendFeedMessage(message, sentBy);
             if (sendMessage) {
+                const feeds = await getAllFeeds();
+                io.emit("feedsMessages", feeds);
                 io.emit("newFeedMessage", sendMessage);
             }
         }
@@ -154,4 +167,4 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 8080;
 
-server.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`))
+httpServer.listen(PORT, () => console.log(`Server is listening on PORT ${PORT}`))
