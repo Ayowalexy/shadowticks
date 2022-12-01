@@ -8,6 +8,7 @@ import path from 'path';
 import AuthRoutes from './routes/auth.js'
 import WalletRoutes from './routes/wallet.js'
 import UrlRoutes from './routes/chat.js'
+import UserRoutes from './routes/user.js'
 import connectDB from './middlewares/connectDB.js';
 import { errorHandler, notFound } from './middlewares/errorhandler.js';
 import express from 'express';
@@ -78,6 +79,7 @@ app.get('/', (req, res) => {
 app.use('/auth', AuthRoutes)
 app.use('/wallet', WalletRoutes)
 app.use('/chat', UrlRoutes)
+app.use('/users', UserRoutes)
 
 
 io.on('connection', socket => {
