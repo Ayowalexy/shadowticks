@@ -4,7 +4,7 @@ const PASSWORD = process.env.PASSWORD;
 const DATABASE = process.env.DATABASE
 
 
-const DB = process.env.MONGODB_URI
+const DB = process.env.MONGODB_URI || 'mongodb+srv://shadow:shaodow100@cluster0.pgbbmll.mongodb.net/?retryWrites=true&w=majority'
 
 const connectDB = async () => {
     try {

@@ -4,7 +4,7 @@
 import expressAsyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import crypto from 'crypto';
-import { sendCoinSchema } from '../middlewares/schema.js';
+import { sendCoinSchema, sendSchema } from '../middlewares/schema.js';
 import Transaction from '../models/transactions.js';
 import Lazerpay from 'lazerpay-node-sdk';
 import axios from 'axios';
@@ -154,10 +154,47 @@ const getAllTransactions = expressAsyncHandler(async (req, res) => {
 })
 
 
+const transferCoin = expressAsyncHandler(async (req, res) => {
+
+    const { error, value } = sendSchema.validate(req.body);
+
+    if (error) {
+        return res
+            .status(401)
+            .json(
+                {
+                    status: "error",
+                    message: "invalid request",
+                    meta: {
+                        error: error.message
+                    }
+                })
+    }
+
+    const user = await User.findById({_id: req.params.id})
+    const receiver = await User.findById({_id: value.receiverId})
+
+    if(user && receiver){
+        if(user?.walletBalance >= value.amount){
+            receiver.walletBalance = Number(receiver.walletBalance) + Number(value.amount);
+            user.walletBalance = Number(user.walletBalance) - Number(value.amount);
+            await receiver.save();
+            await user.save();
+            res.status(200).json({ status: "success", message: 'Amount transfered', walletBalance: user.walletBalance, meta: {} })
+        } else {
+            res.status(401).json({ status: "error", message: 'invalid data', meta: {error: "insufficient balance"} })
+        }
+    } else {
+        res.status(401).json({ status: "error", message: 'invalid data', meta: {error: "user does not exist"} })
+    }
+})
+
+
 export {
     sendCoin,
     getAllWallet,
     confirmPaymentWebhook,
     getAllTransactions,
-    getWalletAddress
+    getWalletAddress,
+    transferCoin
 }

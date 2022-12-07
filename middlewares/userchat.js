@@ -5,6 +5,14 @@ import moment from 'moment';
 import Feed from '../models/feed.js';
 import Message from '../models/message.js';
 
+const clear = async () => {
+    await Feed.deleteMany({});
+    await Message.deleteMany({});
+    await Room.deleteMany({})
+    console.log('cleared')
+}
+
+
 const joinChat = async (id) => {
     try {
 
@@ -93,11 +101,11 @@ const getAllFeeds = async () => {
     }
 }
 
-const sendFeedMessage = async (message, sentBy) => {
+const sendFeedMessage = async (message, sentBy, isFundRequest = false) => {
 
     try {
         const time = moment().format('h:mm a');
-        const newMessage = new Message({ time, message });
+        const newMessage = new Message({ time, message, isFundRequest });
         newMessage.sentBy = sentBy;
 
         const all = await Feed.find()

@@ -151,10 +151,8 @@ io.on('connection', socket => {
 
 
     socket.on('feeds', async () => {
-
         const feeds = await getAllFeeds();
         io.emit("feedsMessages", feeds);
-
     })
 
     socket.on('connectedUser', async (id) => {
@@ -169,7 +167,7 @@ io.on('connection', socket => {
 
 
     socket.on('sendFeedMessage', async (data) => {
-        const { userId, message, receiverId } = data;
+        const { userId, message, receiverId, isFundRequest } = data;
 
         const sentBy = await getUser(userId);
         const receivedBy = await getUser(receiverId);
@@ -200,7 +198,7 @@ io.on('connection', socket => {
         }
 
         if (sentBy) {
-            const sendMessage = await sendFeedMessage(message, sentBy);
+            const sendMessage = await sendFeedMessage(message, sentBy, isFundRequest);
             if (sendMessage) {
                 const feeds = await getAllFeeds();
                 io.emit("feedsMessages", feeds);

@@ -10,6 +10,13 @@ const messageSchema = Joi.object({
         .required()
 })
 
+const sendSchema = Joi.object({
+    amount: Joi.number()
+        .required(),
+    receiverId: Joi.string()
+        .required()
+})
+
 const sendCoinSchema = Joi.object({
     walletAddress: Joi
         .string()
@@ -33,5 +40,6 @@ const sendCoinSchema = Joi.object({
 export {
     loginSchema,
     sendCoinSchema,
-    messageSchema
+    messageSchema,
+    sendSchema
 }

@@ -5,6 +5,10 @@ const Schema = mongoose.Schema;
 const messageSchema = new Schema({
     message: String,
     time: String,
+    isFundRequest: {
+        type: Boolean,
+        default: false
+    },
     reactions: [{
         type: String
     }],
