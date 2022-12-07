@@ -184,7 +184,7 @@ io.on('connection', socket => {
 
             socket.join(userId);
 
-            io.to(userId).emit("allChatUsers", contact);
+            // io.to(userId).emit("allChatUsers", contact);
         }
         if (!receiverHasAddedSender) {
             await addToContact(receiverId, userId);
@@ -193,7 +193,7 @@ io.on('connection', socket => {
 
             socket.join(receiverId);
 
-            io.to(receiverId).emit("allChatUsers", contact);
+            // io.to(receiverId).emit("allChatUsers", contact);
             
         }
 

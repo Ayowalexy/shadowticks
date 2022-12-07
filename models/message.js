@@ -15,7 +15,8 @@ const messageSchema = new Schema({
     sentBy: {
         type: Schema.Types.ObjectId,
         ref: 'user'
-    }
+    },
+    msgId: String
 }, { timestamps: true })
 
 

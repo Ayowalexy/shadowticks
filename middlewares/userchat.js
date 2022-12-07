@@ -4,6 +4,8 @@ import User from '../models/userModel.js';
 import moment from 'moment';
 import Feed from '../models/feed.js';
 import Message from '../models/message.js';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const clear = async () => {
     await Feed.deleteMany({});
@@ -43,9 +45,9 @@ const joinChat = async (id) => {
 
 const addMessage = async (id, message, from, to, senderId, receiverId) => {
     try {
-
+        const msgId = uuidv4();
         const room = await Room.findById({ _id: id })
-        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId }
+        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId, msgId }
         if (room) {
             room.messages.push(msg)
             await room.save();
@@ -105,7 +107,8 @@ const sendFeedMessage = async (message, sentBy, isFundRequest = false) => {
 
     try {
         const time = moment().format('h:mm a');
-        const newMessage = new Message({ time, message, isFundRequest });
+        const msgId = uuidv4();
+        const newMessage = new Message({ time, message, isFundRequest, msgId });
         newMessage.sentBy = sentBy;
 
         const all = await Feed.find()
