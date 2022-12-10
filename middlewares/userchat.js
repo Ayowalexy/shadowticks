@@ -15,6 +15,7 @@ const clear = async () => {
 }
 
 
+
 const joinChat = async (id) => {
     try {
 
@@ -43,11 +44,11 @@ const joinChat = async (id) => {
     }
 }
 
-const addMessage = async (id, message, from, to, senderId, receiverId) => {
+const addMessage = async (id, message, from, to, senderId, receiverId, isFundRequest) => {
     try {
         const msgId = uuidv4();
         const room = await Room.findById({ _id: id })
-        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId, msgId }
+        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId, msgId, isFundRequest }
         if (room) {
             room.messages.push(msg)
             await room.save();
@@ -129,7 +130,7 @@ const sendFeedMessage = async (message, sentBy, isFundRequest = false) => {
 const getAllChatFeeds = async (id) => {
     try {
 
-        const allUser = await User.findById({_id: id}).populate('contact')
+        const allUser = await User.findById({_id: id}).populate('contact').populate('identity')
         const contact = allUser.contact;
 
         return contact;

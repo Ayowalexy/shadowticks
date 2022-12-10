@@ -109,7 +109,7 @@ io.on('connection', socket => {
             } else {
 
 
-                const { senderId, message, receiverId } = data;
+                const { senderId, message, receiverId, isFundRequest } = data;
 
                 const sentBy = await getUser(senderId);
                 const receivedBy = await getUser(receiverId);
@@ -118,7 +118,6 @@ io.on('connection', socket => {
         
                 const receiverHasAddedSender = receivedBy?.contact?.some(element => element._id.toString() === senderId);
         
-                console.log(senderHasAddedReceicer, receiverHasAddedSender)
                 if (!senderHasAddedReceicer) {
                     await addToContact(senderId, receiverId);
         
@@ -141,7 +140,7 @@ io.on('connection', socket => {
 
 
 
-                const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name, sender._id.toString(), receiver._id.toString())
+                const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name, sender._id.toString(), receiver._id.toString(), isFundRequest)
                 io.to(roomUUid).emit("message", newMessage);
                 io.to(roomUUid).emit("allMessages", [...allMessages, newMessage]);
             }
