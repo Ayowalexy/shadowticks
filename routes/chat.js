@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.route('/').get(protect, generateUrl);
-router.route('/reaction/:id').post(protect, addReaction);
+router.route('/reaction/:id/:userId').post(protect, addReaction);
 router.route('/delete-message/:id').delete(protect, deleteFeedMessage);
 router.route('/user-message/:id/:receiver/:msgId').delete(protect, deleteRoomMessage)
 

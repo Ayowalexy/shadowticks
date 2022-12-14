@@ -44,11 +44,11 @@ const joinChat = async (id) => {
     }
 }
 
-const addMessage = async (id, message, from, to, senderId, receiverId, isFundRequest) => {
+const addMessage = async (id, message, from, to, senderId, receiverId, isFundRequest = false) => {
     try {
         const msgId = uuidv4();
         const room = await Room.findById({ _id: id })
-        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId, msgId, isFundRequest }
+        const msg = { message, from, to, time: moment().format('h:mm a'), senderId, receiverId, msgId, isFundRequest}
         if (room) {
             room.messages.push(msg)
             await room.save();
@@ -66,9 +66,28 @@ const getAllMessagess = async (id) => {
 
         const room = await Room.findById({ _id: id });
 
-        if (room) {
-            const messages = room.messages;
-            return messages
+        if (room && room.messages.length) {
+            const msg1 = room.messages[0]
+            const receiver = await User.findById({_id : msg1.receiverId}).populate('identity').populate('transactions')
+            const sender = await User.findById({_id: msg1.senderId}).populate('identity').populate('transactions')
+
+            if(receiver && sender){
+                const messages = room.messages;
+
+                let msg = [];
+
+                for(let el of messages){
+                    msg.push(
+                        {
+                            ...el,
+                            senderDetails: sender,
+                            receiverDetails: receiver
+                        }
+                    )
+                }
+                return msg
+            }
+            
         }
         return
     } catch (e) {

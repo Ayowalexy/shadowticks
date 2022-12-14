@@ -61,7 +61,13 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
 
     const msg = e.target.elements.msg.value;
-    const data = {senderId: '63871e592d596faa859250bc', receiverId: '6387cd995a37a511d67daefa', message: msg, type: 'send message'}
+    const data = {
+        senderId: '63871e592d596faa859250bc', 
+        receiverId: '6387cd995a37a511d67daefa', 
+        message: msg, 
+        type: 'send message', 
+        isFundRequest: false
+    }
     socket.emit('chatuser', data)
     console.log('emit data', data)
 

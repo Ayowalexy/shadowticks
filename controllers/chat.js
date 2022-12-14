@@ -35,9 +35,14 @@ const addReaction = expressAsyncHandler(async (req, res) => {
 
 
     const message = await Message.findById({ _id: req.params.id });
+    const user = await User.findById({_id: req.params.userId}).populate('identity')
 
-    if (message) {
-        message.reactions.push(value.reaction);
+    if (message && user) {
+        const obj = {
+            user: user.identity.name,
+            reaction: value.reaction
+        }
+        message.reactions.push(obj);
         await message.save();
         res.status(201).json({message: "reaction added succesfully", data: message, meta: {}})
     }

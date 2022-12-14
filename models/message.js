@@ -10,7 +10,7 @@ const messageSchema = new Schema({
         default: false
     },
     reactions: [{
-        type: String
+        type: Object
     }],
     sentBy: {
         type: Schema.Types.ObjectId,

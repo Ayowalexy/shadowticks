@@ -101,7 +101,7 @@ io.on('connection', socket => {
 
             const receiver = await getUser(receiverId);
 
-            const allMessages = await getAllMessagess(roomUUid);
+            const allMessages = await getAllMessagess(roomUUid) || []
 
 
             if (type === 'load messages') {
@@ -109,7 +109,7 @@ io.on('connection', socket => {
             } else {
 
 
-                const { senderId, message, receiverId, isFundRequest } = data;
+                const { senderId, message, receiverId, isFundRequest, ...rest } = data;
 
                 const sentBy = await getUser(senderId);
                 const receivedBy = await getUser(receiverId);
@@ -137,7 +137,6 @@ io.on('connection', socket => {
                     io.to(receiverId).emit("allChatUsers", contact);
                     
                 }
-
 
 
                 const newMessage = await addMessage(roomUUid, message, sender.identity.name, receiver.identity.name, sender._id.toString(), receiver._id.toString(), isFundRequest)
