@@ -48,6 +48,35 @@ const addReaction = expressAsyncHandler(async (req, res) => {
     }
 })
 
+const viewMessage = expressAsyncHandler( async ( req, res ) => {
+    const message = await Message.findById({ _id: req.params.id});
+
+    if(message){
+        message.view = true;
+        await message.save();
+        res.status(201).json({message: "message view", data: message, meta: {}})
+    }
+    res.status(401).json({message: "invalid request", status: 'error', data: '', meta: { error: "Message does not exist"}})
+
+})
+
+
+const addImageToMessage = expressAsyncHandler ( async ( req, res ) => {
+    const message = await Message.findById({_id: req.params.id});
+
+    if(message){
+        message.imageUrl = req.body.imageUrl;
+        await message.save();
+        res.status(201).json({message: "Image added", data: message, meta: {}})
+        return 
+    }
+    
+    res.status(401).json({message: "invalid request", status: 'error', data: '', meta: { error: "Message does not exist"}})
+
+
+})
+
+
 const deleteFeedMessage = expressAsyncHandler( async (req, res ) => {
     const message = await Message.findByIdAndDelete({_id: req.params.id});
     const allMessages = await Message.find()
@@ -77,5 +106,7 @@ export {
     generateUrl,
     addReaction,
     deleteFeedMessage,
-    deleteRoomMessage
+    deleteRoomMessage,
+    viewMessage,
+    addImageToMessage
 }

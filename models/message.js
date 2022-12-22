@@ -16,7 +16,12 @@ const messageSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     },
-    msgId: String
+    msgId: String,
+    imageUrl: String,
+    view: {
+        type: Boolean,
+        default: false
+    }
 }, { timestamps: true })
 
 
